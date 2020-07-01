@@ -47,7 +47,7 @@ public class ServiceController {
 				getTables= getTables();
 		
 		DBCoreGenFileManager filewriter= new DBCoreGenFileManager(modelPath,packageName);
-		if (! filewriter.makeDir() ) {
+		if (! filewriter.makeDir(modelPath) ) {
 			DBCoreGenLogger.printError("Making dir if fail!! - " + modelPath);
 			return;
 		}

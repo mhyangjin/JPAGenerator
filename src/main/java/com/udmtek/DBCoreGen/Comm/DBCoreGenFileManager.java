@@ -13,32 +13,23 @@ public class DBCoreGenFileManager {
 	}
 	
 	public void makeFile(TableInfo tableInfo) {
-		DBCoreGenDAOWriter.generateFile(modelPATH + "\\DAO", packageName, tableInfo);
-		DBCoreGenInfoWriter.generateFile(modelPATH + "\\Info", packageName, tableInfo);
-		DBCoreGenImplWriter.generateFile(modelPATH + "\\Impl", packageName, tableInfo);
-		DBCoreGenInfoImplWriter.generateFile(modelPATH + "\\InfoImpl", packageName, tableInfo);
+		String tableName= tableInfo.getTableName();
+		String className= DBCoreGenFileWriter.convertCamel(tableName);
+		String path=modelPATH + "//" + className;
+		String packName = packageName + "." + className;
+		if (!makeDir (path) ) return;
+		DBCoreGenEntityWriter.generateFile(path,packName, tableInfo);
+		DBCoreGenDTOWriter.generateFile(path, packName, tableInfo);
+		DBCoreGenDAOWriter.generateFile(path, packName, tableInfo);
+		DBCoreGenMapperWriter.generateFile(path, packName, tableInfo);
 	}
 	
-	public boolean makeDir() {
-		File dir = new File (modelPATH);
+	public boolean makeDir(String Path) {
+		File dir = new File (Path);
 		boolean dirOK = dir.canExecute() ;
 		if ( !dirOK) {
 			dirOK=dir.mkdir();
-		}
-		
-		dir= new File(modelPATH + "\\DAO");
-		if (! dir.canExecute())
-			dir.mkdir();
-		dir= new File(modelPATH + "\\Info");
-		if (! dir.canExecute())
-			dir.mkdir();
-		dir= new File(modelPATH + "\\Impl");
-		if (! dir.canExecute())
-			dir.mkdir();
-		dir= new File(modelPATH + "\\InfoImpl");
-		if (! dir.canExecute())
-			dir.mkdir();
-		
+		}	
 		return dirOK;
 	}
 }
