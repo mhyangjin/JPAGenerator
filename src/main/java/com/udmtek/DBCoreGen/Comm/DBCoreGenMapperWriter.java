@@ -12,11 +12,11 @@ import com.udmtek.DBCoreGen.DBconn.TableInfo;
 public class DBCoreGenMapperWriter extends DBCoreGenFileWriter {
 	private static final String MapperlHeader = 
 			"import org.springframework.stereotype.Component;\r\n" +
-			"import com.udmtek.DBCore.DAOModel.DBCOreDTOMapperImpl;";
+			"import com.udmtek.DBCore.DAOModel.DBCoreDTOMapperImpl;";
 
 	private static final String MapperlClassDefine =
 				"@Component\r\n" + 
-				"public class <CLASSNAME>Mapper extends DBCOreDTOMapperImpl< <CLASSNAME>, <CLASSNAME>DTO > {\r\n";
+				"public class <CLASSNAME>Mapper extends DBCoreDTOMapperImpl< <CLASSNAME>, <CLASSNAME>DTO > {\r\n";
 	
 	public static void generateFile(String path, String packageName, TableInfo tableInfo) {
 		String tableName= tableInfo.getTableName();

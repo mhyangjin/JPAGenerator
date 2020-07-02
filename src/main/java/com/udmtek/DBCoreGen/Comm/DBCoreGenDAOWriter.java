@@ -17,7 +17,7 @@ public class DBCoreGenDAOWriter extends DBCoreGenFileWriter {
 	
 	private static final String DAOClassDefine =
 							"@Repository(\"<CLASSNAME>DAO\")\r\n" + 
-							"public class <CLASSNAME>DAO extends GenericDAOImpl< <CLASSNAME>, <CLASSNAME>DTO, <CLASSNAME>Mapper > {\r\n" +
+							"public class <CLASSNAME>DAO extends GenericDAOImpl< <CLASSNAME>, <CLASSNAME>DTO, <CLASSNAME>Mapper > implements <CLASSNAME>Interface {\r\n" +
 							"	@Autowired\r\n" + 
 							"	<CLASSNAME>Mapper mapper;\r\n";
 	

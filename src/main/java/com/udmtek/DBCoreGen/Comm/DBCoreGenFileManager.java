@@ -22,6 +22,7 @@ public class DBCoreGenFileManager {
 		DBCoreGenDTOWriter.generateFile(path, packName, tableInfo);
 		DBCoreGenDAOWriter.generateFile(path, packName, tableInfo);
 		DBCoreGenMapperWriter.generateFile(path, packName, tableInfo);
+		DBCoreGenDAOInfWriter.generateFile(path, packName, tableInfo);
 	}
 	
 	public boolean makeDir(String Path) {
