@@ -1,4 +1,4 @@
-package JPAMapper;
+package com.udmtek.DBCoreGen.JPAMapper;
 
 public enum TypeToImportClass {
 	Date("import java.util.Date"),
