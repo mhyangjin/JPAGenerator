@@ -5,58 +5,64 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import com.udmtek.DBCoreGen.DBconn.ColumnInfo;
 import com.udmtek.DBCoreGen.DBconn.TableInfo;
 
 
 public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
-	private static final String DTOHeader = 
-			"import java.util.Date;\r\n" + 
-			"import org.springframework.context.annotation.Scope;\r\n" + 
-			"import org.springframework.stereotype.Component;\r\n" + 
-			"import com.udmtek.DBCore.DAOModel.DBCoreDTO;\r\n" + 
-			"import lombok.Getter;\r\n" + 
-			"import lombok.Setter;";
-	private static final String DTOClassDefine = 
-			"@Getter\r\n" + 
-			"@Setter\r\n" + 
-			"@Component\r\n" + 
-			"@Scope(value = \"prototype\" )" +
-			"\r\n" + 
-			"public class <CLASSNAME> implements DBCoreDTO {";
-	private static final String DTOFooterDefine = 
-			"	@Override\r\n" + 
-			"	protected Object clone() throws CloneNotSupportedException{\r\n" + 
-			"		return super.clone();\r\n" + 
-			"	}\r\n" ;
-	public static void generateFile(String path, String packageName, TableInfo tableInfo) {
+	public static void generateFile(String path, String packageName, TableInfo tableInfo,Map <String,String> classNameTailMap) {
 		String tableName= tableInfo.getTableName();
-		String className= convertCamel(tableName)+"DTO";
+		String className= convertCamel(tableName);
 		className=className.toUpperCase().charAt(0) + className.substring(1);
+		String DtoName= className + classNameTailMap.get("DTO");
+		List<ColumnInfo> keyColumnInfos= tableInfo.getKeyColumns();
+		List<ColumnInfo> columnInfos= tableInfo.getColumns();
+		boolean extendClass = false;
+		if ( columnInfos.size() !=  tableInfo.getExceptCreateUpdateInfo().size()) {
+			extendClass = true;
+			columnInfos=tableInfo.getExceptCreateUpdateInfo();
+		}
 		
-		List<ColumnInfo> columnInfos= tableInfo.getAllColumns();
-		File writeFile = makeFile(path + "//"+ className + ".java");
+		ClassPack classPack=setClassDefine(packageName);
+		
+		File writeFile = makeFile(path + "//"+ DtoName + ".java");
 		BufferedWriter bufferWriter =null;
 		
 		try {
 			bufferWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream(writeFile),"UTF8"));
-			//Header 
-			writeStream(bufferWriter, "package " + packageName+";");
-			writeStream(bufferWriter, DTOHeader );
-			//comment
-			writeStream(bufferWriter, commentString );
-			//class define
-			String classDefine =  DTOClassDefine.replaceAll("<CLASSNAME>", className);
-			writeStream(bufferWriter, classDefine );
+			classPack.addClassDef("@Getter");
+			classPack.addClassDef("@Setter");
+			classPack.addClassDef("@Component");
+			classPack.addClassDef("@Scope(value = \"prototype\" )");
+			classPack.makeImportString("Getter");
+			classPack.makeImportString("Setter");
+			classPack.makeImportString("Component");
+			classPack.makeImportString("Scope");
+	
+			if ( extendClass) {
+				classPack.addClassDef("public class " + DtoName + " extends DBCoreDTOImpl ");
+				classPack.makeImportString("DBCoreDTOImpl");
+			}
+			else {
+				classPack.addClassDef("public class " + DtoName +" extends DBCoreDTOImpl ");
+				classPack.makeImportString("DBCoreDTOImpl");
+			}
+			//column key columns define
+			mekeColumns(keyColumnInfos,classPack);
 			//column columns define
-			List<String> columndefines=mekeColumns(columnInfos);
-			writeStream(bufferWriter, columndefines);
+			mekeColumns(columnInfos,classPack);
 			//Footer
-			writeStream(bufferWriter, DTOFooterDefine );
-			writeStream(bufferWriter, "}");
-
+			classPack.addMethodDef("	public String ToString() {");
+			classPack.addMethodDef("		return this.toString() + super.toString();");
+			classPack.addMethodDef("	}\r\n");
+			classPack.addMethodDef("	@Override");
+			classPack.addMethodDef("	public Object clone() throws CloneNotSupportedException {" );
+			classPack.addMethodDef("		return super.clone();");
+			classPack.addMethodDef("	}") ;
+			writeStream(bufferWriter, classPack);
 			bufferWriter.flush();
 			bufferWriter.close();
 		} catch (IOException e) {
@@ -64,8 +70,7 @@ public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
 		}
 	}
 
-	public static List<String> mekeColumns (List<ColumnInfo> columnInfos) {
-		List<String> constStrings = new ArrayList<String>();
+	public static void mekeColumns (List<ColumnInfo> columnInfos, ClassPack classPack) {
 		for ( ColumnInfo columnInfo:columnInfos)  {			
 			String columnName ="";
 			String columnType ="";
@@ -74,12 +79,13 @@ public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
 				columnName = columnInfo.getColumnName();
 				columnType = columnInfo.getTypeName().toUpperCase();
 				ColumnTypeEnum dbClumnType= ColumnTypeEnum.valueOf(columnType);
-					constStrings.add("	private " + dbClumnType.getJavaType() + " " + convertCamel(columnName) + ";");
+				classPack.addAttrDef("	private " + dbClumnType.getJavaType() + " " + convertCamel(columnName) + ";");
+				classPack.makeImportString( dbClumnType.getJavaType());
 			}	catch (Exception e ) {
 				DBCoreGenLogger.printInfo("ColumnName:" + columnName + "columnType:"  + columnType);
 				throw e;
 			}
 		}		
-		return constStrings;	
+
 	}
 }

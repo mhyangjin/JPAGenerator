@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
 	<persistence-unit name="default">
-		<properties>
-			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
-			<property name="hibernate.connection.url" 
-				value="jdbc:postgresql://www.udmcps.com:5454/udmtmesdb_daeil" />
-   			<property name="hibernate.connection.username" value="postgres" />
-			<property name="hibernate.connection.password" value="wemes123"/>
-			<property name="hibernate.dialect" 
-						value="org.hibernate.dialect.PostgreSQLDialect" />	
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.allow_update_outside_transaction" value="true" />
-			<property name="hibernate.temp.use_jdbc_metadata_defaults" value="false" />
-			<property name="hibernate.jdbc.batch_size" value="10" />
-		</properties>
-	</persistence-unit>
-
-	<persistence-unit name="udmtmesdb">
 		<properties>
 			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
 			<property name="hibernate.connection.url" 
@@ -32,6 +17,21 @@
 		</properties>
 	</persistence-unit>
 
+    <persistence-unit name="udmt">
+        <properties>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
+            <property name="hibernate.connection.url" 
+                value="jdbc:postgresql://www.udmcps.com:5454/udmtmesdb_daeil" />
+            <property name="hibernate.connection.username" value="postgres" />
+            <property name="hibernate.connection.password" value="wemes123"/>
+            <property name="hibernate.dialect" 
+                        value="org.hibernate.dialect.PostgreSQLDialect" />  
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.allow_update_outside_transaction" value="true" />
+            <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false" />
+            <property name="hibernate.jdbc.batch_size" value="10" />
+        </properties>
+    </persistence-unit>
 
 
 </persistence>

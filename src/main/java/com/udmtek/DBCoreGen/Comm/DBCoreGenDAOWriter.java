@@ -5,44 +5,45 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import com.udmtek.DBCoreGen.DBconn.TableInfo;
 
 public class DBCoreGenDAOWriter extends DBCoreGenFileWriter {
-	private static final String DAOHeader = 
-							"import org.springframework.beans.factory.annotation.Autowired;\r\n" +
-							"import org.springframework.stereotype.Repository;\r\n" + 
-							"import com.udmtek.DBCore.DAOModel.GenericDAOImpl;\r\n";
 	
-	private static final String DAOClassDefine =
-							"@Repository(\"<CLASSNAME>DAO\")\r\n" + 
-							"public class <CLASSNAME>DAO extends GenericDAOImpl< <CLASSNAME>, <CLASSNAME>DTO, <CLASSNAME>Mapper > implements <CLASSNAME>Interface {\r\n" +
-							"	@Autowired\r\n" + 
-							"	<CLASSNAME>Mapper mapper;\r\n";
-	
-	public static void generateFile(String path, String packageName, TableInfo tableInfo) {
+	public static void generateFile(String path, String packageName, TableInfo tableInfo,Map <String,String> classNameTailMap) {
 		String tableName= tableInfo.getTableName();
 		String className= convertCamel(tableName);
 		className=className.toUpperCase().charAt(0) + className.substring(1);
+		String DAOName=className + classNameTailMap.get("DAO");
+		String EntityName=className + classNameTailMap.get("ENTITY");
+		String DtoName=className + classNameTailMap.get("DTO");
+		String MapperName=className + classNameTailMap.get("MAPPER");
+		String InfName=className + classNameTailMap.get("INF");
 		
-		File writeFile = makeFile(path + "//"+ className + "DAO.java");
+		ClassPack classPack=setClassDefine(packageName);
+		
+		File writeFile = makeFile(path + "//"+DAOName + ".java");
 		BufferedWriter bufferWriter =null;
 		
 		try {
 			bufferWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream(writeFile),"UTF8"));
-			//Header 
-			writeStream(bufferWriter, "package " + packageName + ";");
-			writeStream(bufferWriter, DAOHeader );
-			//comment
-			writeStream(bufferWriter, commentString );
 			//class define
-			String classDefine =  DAOClassDefine.replaceAll("<CLASSNAME>", className);
-			writeStream(bufferWriter, classDefine );
+			classPack.addClassDef("@Repository(\""+DAOName+"\")");
+			String classDefine = "public class "+DAOName+" extends GenericDAOImpl< "+EntityName+", "+DtoName+","+MapperName +"> ";
+
+			if (!classNameTailMap.get("INF").contains("NONE") )
+				classDefine = classDefine + "implements "+ InfName;
+
+			classPack.addClassDef(classDefine);
+			classPack.addAttrDef("	@Autowired");
+			classPack.addAttrDef("	" + MapperName+" mapper;");
+			classPack.makeImportString("Repository");;
+			classPack.makeImportString("GenericDAOImpl");
+			classPack.makeImportString("Autowired");
+
 			//key columns define
-			 List<String>  constructString=makeconstructor(className);
-			writeStream(bufferWriter, constructString);
-			writeStream(bufferWriter, "}");
+			makeconstructor(className,classNameTailMap,classPack);
+			writeStream(bufferWriter, classPack);
 
 			bufferWriter.flush();
 			bufferWriter.close();
@@ -51,11 +52,13 @@ public class DBCoreGenDAOWriter extends DBCoreGenFileWriter {
 		}
 	}
 	
-	public static List<String> makeconstructor(String className) {
-		List<String> constructString = new ArrayList<String>();
-		constructString.add("	public " + className + "DAO() {" );
-		constructString.add("		super(" +className +".class," + className + "DTO.class);" );
-		constructString.add("	}");
-		return constructString;
+	public static void makeconstructor(String className,Map <String,String> classNameTailMap, ClassPack classPack) {
+		String DaoName=className + classNameTailMap.get("DAO");
+		String EntityName=className + classNameTailMap.get("ENTITY");
+		String DtoName=className + classNameTailMap.get("DTO");
+		classPack.addMethodDef("	public " + DaoName+ "() {" );
+		classPack.addMethodDef("		super(" +EntityName + ".class," + DtoName + ".class);");
+		classPack.addMethodDef("	}");
+	
 	}
 }

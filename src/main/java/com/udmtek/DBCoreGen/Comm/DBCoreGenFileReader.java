@@ -14,6 +14,8 @@ import lombok.Getter;
 public class DBCoreGenFileReader {
 	private  final String properyFile="./src/main/resources/DBInfo.properties";
 	@Getter
+	private String outputMode;
+	@Getter
 	private String dbName;
 	@Getter
 	private String extractPath;
@@ -25,6 +27,7 @@ public class DBCoreGenFileReader {
 	private File configFile;
 	
 	public enum ContentsIndex {
+		OUTPUTMODE("ouputMode"),
 		TABLES("tables"),
 		DBNAME("dbName"),
 		EXTRACTPATH("extractPath"),
@@ -74,8 +77,15 @@ public class DBCoreGenFileReader {
 				if ( line.indexOf("tables") > -1 ) {
 					contentsIndex = ContentsIndex.TABLES;
 				}
-				
+				if ( line.indexOf("ouputMode") > -1 ) {
+					contentsIndex = ContentsIndex.OUTPUTMODE;
+				}
+					
 				switch (contentsIndex) {
+				case OUTPUTMODE:
+					outputMode=line.substring(line.indexOf("=")+1);
+					DBCoreGenLogger.printInfo("OUTPUTMODE:" + outputMode);
+					break;
 				case DBNAME:
 					dbName=line.substring(line.indexOf("=")+1);
 					DBCoreGenLogger.printInfo("CONFIG:DBNAME:" + dbName);

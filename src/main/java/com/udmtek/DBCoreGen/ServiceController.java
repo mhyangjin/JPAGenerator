@@ -12,6 +12,7 @@ import com.udmtek.DBCoreGen.DBconn.TableInfo;
 
 
 public class ServiceController {
+	private String outputMode="";
 	private String schemaName="mes";
 	private String dbName="udmtmesdb";
 	private String modelPath;
@@ -31,6 +32,7 @@ public class ServiceController {
 		DBCoreGenFileReader configReader= new DBCoreGenFileReader();
 		boolean cofigFileOK = configReader.readConfigFile();
 		if (cofigFileOK) {
+			outputMode=configReader.getOutputMode();
 			dbName= configReader.getDbName();
 			modelPath=configReader.getExtractPath();
 			packageName= configReader.getPackageName();
@@ -46,7 +48,7 @@ public class ServiceController {
 		if ( getTables.size() == 0)
 				getTables= getTables();
 		
-		DBCoreGenFileManager filewriter= new DBCoreGenFileManager(modelPath,packageName);
+		DBCoreGenFileManager filewriter= new DBCoreGenFileManager(outputMode,modelPath,packageName);
 		if (! filewriter.makeDir(modelPath) ) {
 			DBCoreGenLogger.printError("Making dir if fail!! - " + modelPath);
 			return;
@@ -59,8 +61,9 @@ public class ServiceController {
 					tableInfos.add(tableInfo);
 			}	
 		}
-		
+		DBCoreGenLogger.printInfo("tableInfos size:" + tableInfos.size());
 		for ( int i=0; i< tableInfos.size(); i ++) {
+			DBCoreGenLogger.printInfo("Table makeFile:" + tableInfos.get(i).getTableName());
 			filewriter.makeFile(tableInfos.get(i));
 		}
 		DBCoreGenLogger.printInfo("Table Info gen complete!" + tableInfos.size());
@@ -85,6 +88,7 @@ public class ServiceController {
 		List<ColumnInfo> columns = null;
 		try {
 			columns = dbcon.getColumns(dbName, TableName);
+			DBCoreGenLogger.printInfo("columns size:" + columns.size());
 		}
 		catch (Exception e) {
 			e.printStackTrace();

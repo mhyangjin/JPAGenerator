@@ -44,5 +44,21 @@ public class TableInfo{
 	public List<ColumnInfo> getAllColumns() {
 		return ColumnInfolist;
 	}
+	
+	public List<ColumnInfo> getExceptCreateUpdateInfo() {
+		List<ColumnInfo> Columns = new ArrayList<>();
+		for ( ColumnInfo columnInfo : ColumnInfolist) {
+			if ( !columnInfo.getColumnName().equals("createperson") &&
+			     !columnInfo.getColumnName().equals("createtime") &&
+			     !columnInfo.getColumnName().equals("lasteventcomment") &&
+			     !columnInfo.getColumnName().equals("lasteventname") &&
+			     !columnInfo.getColumnName().equals("lasteventperson") &&
+			     !columnInfo.getColumnName().equals("lasteventtime") &&
+			     !columnInfo.getColumnName().equals("lasteventtimekey") &&
+			     columnInfo.getConstraintName().equals("N"))
+				Columns.add(columnInfo);
+		}
+		return Columns;
+	}
 
 }
