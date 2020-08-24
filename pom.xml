@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.1.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.1.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 	<groupId>com.udmtek</groupId>
 	<artifactId>DBCoreGen</artifactId>
 	<name>DBCoreGen</name>
@@ -17,7 +17,6 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<spring-boot-admin.version>2.2.3</spring-boot-admin.version>
 	</properties>
 
 	<dependencies>
@@ -32,12 +31,15 @@
 		<dependency>
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-server</artifactId>
+			<version>2.2.4</version>
 		</dependency>
+<!-- https://mvnrepository.com/artifact/ch.simas.qlrm/qlrm -->
 		<dependency>
-			<groupId>ch.simas.qlrm</groupId>
-			<artifactId>qlrm</artifactId>
-			<version>1.7.1</version>
-		</dependency>		
+		    <groupId>ch.simas.qlrm</groupId>
+		    <artifactId>qlrm</artifactId>
+		    <version>1.7.1</version>
+		</dependency>
+	
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -55,9 +57,9 @@
 			<dependency>
 				<groupId>de.codecentric</groupId>
 				<artifactId>spring-boot-admin-dependencies</artifactId>
-				<version>${spring-boot-admin.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+				<version>2.2.4</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -67,6 +69,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.3.1.RELEASE</version>
 			</plugin>
 		</plugins>
 	</build>
