@@ -1,4 +1,4 @@
-package com.udmtek.DBCoreGen.Comm;
+package com.codeJ.JPAGenerator.Comm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

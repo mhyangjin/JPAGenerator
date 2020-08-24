@@ -1,13 +1,15 @@
-package com.udmtek.DBCoreGen.Comm;
+package com.codeJ.JPAGenerator.Writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.udmtek.DBCoreGen.JPAMapper.TypeToImportClass;
+import com.codeJ.JPAGenerator.Comm.DBCoreGenLogger;
+import com.codeJ.JPAGenerator.JPAMapper.TypeToImportClass;
 
 
 public class DBCoreGenFileWriter {
@@ -25,7 +27,7 @@ public class DBCoreGenFileWriter {
 		private StringBuffer classDefString;
 		private StringBuffer attrDefString;
 		private StringBuffer methodDefString;
-		
+		private final String[] ignoreDataType = { "String", "int", "boolean", "long" };
 		public ClassPack (String packName) {
 				packageDefine = "package "+ packName + ";";
 				importStringMap = new HashMap<>();
@@ -44,12 +46,14 @@ public class DBCoreGenFileWriter {
 						methodDefString +"\r\n" +
 						"}";
 			}
-		
+		public void addImportEntityClass(String appendString) {
+			importString.append(appendString);
+		}
 		public void makeImportString(String defineName) {
 			//import 했던 것은 제외
 			if (importStringMap.get(defineName) != null )return;
 			//String type은 제외
-			if ( defineName.equals("String")) return;
+			if ( Arrays.asList(ignoreDataType).contains(defineName) ) return;
 			
 			TypeToImportClass typeImportClass=null;
 			try {

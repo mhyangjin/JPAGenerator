@@ -1,10 +1,8 @@
-package com.udmtek.DBCoreGen.DBconn;
+package com.codeJ.JPAGenerator.Comm;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.udmtek.DBCoreGen.Comm.DBCoreGenLogger;
 
 public class TableInfo{
 	String TableName;
@@ -23,7 +21,7 @@ public class TableInfo{
 	public List<ColumnInfo> getColumns() {
 		List<ColumnInfo> Columns = new ArrayList<>();
 		for ( ColumnInfo columnInfo : ColumnInfolist) {
-			if ( columnInfo.getConstraintName().equals("N") ) {
+			if ( columnInfo.getIsPkey().equals("N") ) {
 				Columns.add(columnInfo);
 			}
 		}
@@ -34,7 +32,7 @@ public class TableInfo{
 		if ( keyColumns != null ) return keyColumns;
 		List<ColumnInfo> keyColumns = new ArrayList<>();
 		for ( ColumnInfo columnInfo : ColumnInfolist) {
-			if ( ! columnInfo.getConstraintName().equals("N") ) {
+			if (columnInfo.getIsPkey().equals("Y") ) {
 				keyColumns.add(columnInfo);
 			}
 		}
@@ -48,14 +46,11 @@ public class TableInfo{
 	public List<ColumnInfo> getExceptCreateUpdateInfo() {
 		List<ColumnInfo> Columns = new ArrayList<>();
 		for ( ColumnInfo columnInfo : ColumnInfolist) {
-			if ( !columnInfo.getColumnName().equals("createperson") &&
-			     !columnInfo.getColumnName().equals("createtime") &&
-			     !columnInfo.getColumnName().equals("lasteventcomment") &&
-			     !columnInfo.getColumnName().equals("lasteventname") &&
-			     !columnInfo.getColumnName().equals("lasteventperson") &&
-			     !columnInfo.getColumnName().equals("lasteventtime") &&
-			     !columnInfo.getColumnName().equals("lasteventtimekey") &&
-			     columnInfo.getConstraintName().equals("N"))
+			if ( !columnInfo.getColumnName().equals("creator_id") &&
+			     !columnInfo.getColumnName().equals("create_date_time") &&
+			     !columnInfo.getColumnName().equals("updator_id") &&
+			     !columnInfo.getColumnName().equals("update_date_time") &&
+			     columnInfo.getIsPkey().equals("N"))
 				Columns.add(columnInfo);
 		}
 		return Columns;

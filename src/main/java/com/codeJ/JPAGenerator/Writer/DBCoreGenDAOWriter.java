@@ -1,4 +1,4 @@
-package com.udmtek.DBCoreGen.Comm;
+package com.codeJ.JPAGenerator.Writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Map;
-import com.udmtek.DBCoreGen.DBconn.TableInfo;
+
+import com.codeJ.JPAGenerator.Comm.TableInfo;
+import com.codeJ.JPAGenerator.Writer.DBCoreGenFileWriter.ClassPack;
 
 public class DBCoreGenDAOWriter extends DBCoreGenFileWriter {
 	

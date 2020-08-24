@@ -1,4 +1,4 @@
-package com.udmtek.DBCoreGen.Comm;
+package com.codeJ.JPAGenerator.Comm;
 
 public enum ColumnTypeEnum {
 	VARCHAR("String"),
@@ -27,4 +27,5 @@ public enum ColumnTypeEnum {
 	public String getJavaType() {
 		return ColumnTypeString;
 	}
+
 }

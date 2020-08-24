@@ -1,21 +1,25 @@
-package com.udmtek.DBCoreGen.Comm;
+package com.codeJ.JPAGenerator.Comm;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.udmtek.DBCoreGen.DBconn.TableInfo;
+import com.codeJ.JPAGenerator.Writer.DBCoreGenDAOInfWriter;
+import com.codeJ.JPAGenerator.Writer.DBCoreGenDAOWriter;
+import com.codeJ.JPAGenerator.Writer.DBCoreGenDTOWriter;
+import com.codeJ.JPAGenerator.Writer.DBCoreGenEntityWriter;
+import com.codeJ.JPAGenerator.Writer.DBCoreGenFileWriter;
+import com.codeJ.JPAGenerator.Writer.DBCoreGenMapperWriter;
 
 public class DBCoreGenFileManager {
 	String outputMode;
-	String modelPATH;
-	String packageName;
-	Map <String,String> classNameTailMap;
 	
-	public DBCoreGenFileManager( String outputMode, String modelPATH, String packageName) {
-		this.outputMode = outputMode;
-		this.modelPATH = modelPATH;
-		this.packageName= packageName;
+	Map <String,String> classNameTailMap;
+	DBCoreGenFileReader configReader;
+	
+	public DBCoreGenFileManager( DBCoreGenFileReader configReader) {
+		this.outputMode = configReader.getOutputMode();
+		this.configReader=configReader;
 		classNameTailMap=new HashMap<>();
 		
 		/**
@@ -44,13 +48,13 @@ public class DBCoreGenFileManager {
 	public void makeFile(TableInfo tableInfo) {
 		String tableName= tableInfo.getTableName();
 		String className= DBCoreGenFileWriter.convertCamel(tableName);
-		String path=modelPATH + "//" + className;
-		String packName = packageName + "." + className;
+		String path=configReader.getExtractPath() + "//" + className;
+		String packName = configReader.getPackageName() + "." + className;
 		if (!makeDir (path) ) return;
 
 //		DBCoreGenLogger.printInfo(tableInfo.getTableName() + ":"+tableInfo.containsCreateOrUpdateInfo());
 //		if ( )
-		DBCoreGenEntityWriter.generateFile(path,packName, tableInfo,classNameTailMap);
+		DBCoreGenEntityWriter.generateFile(configReader, tableInfo,classNameTailMap);
 		DBCoreGenDTOWriter.generateFile(path, packName, tableInfo,classNameTailMap);
 		DBCoreGenDAOWriter.generateFile(path, packName, tableInfo,classNameTailMap);
 		DBCoreGenMapperWriter.generateFile(path, packName, tableInfo,classNameTailMap);

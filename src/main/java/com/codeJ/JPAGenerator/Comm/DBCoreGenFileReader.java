@@ -1,4 +1,4 @@
-package com.udmtek.DBCoreGen.Comm;
+package com.codeJ.JPAGenerator.Comm;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,15 +23,24 @@ public class DBCoreGenFileReader {
 	private String packageName;
 	@Getter
 	private List<String> tables;
-	
+	@Getter
+	private List<String> ignoreTables;
+	@Getter
+	private boolean tableJoin;
+	@Getter
+	private String schemaName;	
 	private File configFile;
+
 	
 	public enum ContentsIndex {
 		OUTPUTMODE("ouputMode"),
 		TABLES("tables"),
 		DBNAME("dbName"),
 		EXTRACTPATH("extractPath"),
-		PACKAGENAME("package"),;
+		PACKAGENAME("package"),
+		IGNORETABLES("ignoreTables"),
+		SCHEMANAME("schemaName"),
+		TABLEJOIN("tableJoin");
 		private String indexString;
 		ContentsIndex(String indexString) {
 			this.indexString = indexString;
@@ -43,6 +52,7 @@ public class DBCoreGenFileReader {
 
 	public DBCoreGenFileReader() {
 		tables=new ArrayList<String>();
+		ignoreTables=new ArrayList<String>();
 	}
 	public  boolean readConfigFile() {
 		configFile = new File (properyFile);
@@ -80,7 +90,16 @@ public class DBCoreGenFileReader {
 				if ( line.indexOf("ouputMode") > -1 ) {
 					contentsIndex = ContentsIndex.OUTPUTMODE;
 				}
-					
+				if ( line.indexOf("ignoreTables") > -1 ) {
+					contentsIndex = ContentsIndex.IGNORETABLES;
+				}
+				if ( line.indexOf("tableJoin") > -1 ) {
+					contentsIndex = ContentsIndex.TABLEJOIN;
+				}
+				if ( line.indexOf("schemaName") > -1 ) {
+					contentsIndex = ContentsIndex.SCHEMANAME;
+				}
+				String temp="";
 				switch (contentsIndex) {
 				case OUTPUTMODE:
 					outputMode=line.substring(line.indexOf("=")+1);
@@ -99,12 +118,32 @@ public class DBCoreGenFileReader {
 					DBCoreGenLogger.printInfo("packageName:" + packageName);
 					break;
 				case TABLES:
-					String temp=line.substring(line.indexOf("=")+1);
+					temp=line.substring(line.indexOf("=")+1);
 					if ( temp.isEmpty())
 						DBCoreGenLogger.printInfo("table is empty:");
 					else
 						tables = Arrays.asList(temp.split(","));
 					DBCoreGenLogger.printInfo("tables:" + tables);
+					break;
+				case IGNORETABLES:
+					temp=line.substring(line.indexOf("=")+1);
+					if ( temp.isEmpty())
+						DBCoreGenLogger.printInfo("ignore table is empty:");
+					else
+						ignoreTables = Arrays.asList(temp.split(","));
+					DBCoreGenLogger.printInfo("ignore tables:" + ignoreTables);
+				case TABLEJOIN:
+					String tableJoinString=line.substring(line.indexOf("=")+1);
+					if ( tableJoinString.contentEquals("Y"))
+						tableJoin=true;
+					else
+						tableJoin=false;
+					DBCoreGenLogger.printInfo("tableJoin:" + tableJoinString);
+					break;
+				case SCHEMANAME:
+					schemaName=line.substring(line.indexOf("=")+1);
+					DBCoreGenLogger.printInfo("schemaName:" + schemaName);
+					break;
 				}
 			}	
 			bufferReader.close();

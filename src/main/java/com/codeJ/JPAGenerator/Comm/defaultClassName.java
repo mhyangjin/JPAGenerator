@@ -1,4 +1,4 @@
-package com.udmtek.DBCoreGen.Comm;
+package com.codeJ.JPAGenerator.Comm;
 
 public enum defaultClassName {
 	ENTITY("<CLASSNAME>"),

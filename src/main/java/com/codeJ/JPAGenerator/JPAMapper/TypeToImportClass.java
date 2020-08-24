@@ -1,4 +1,6 @@
-package com.udmtek.DBCoreGen.JPAMapper;
+package com.codeJ.JPAGenerator.JPAMapper;
+
+import javax.persistence.ManyToOne;
 
 public enum TypeToImportClass {
 	Date("import java.util.Date"),
@@ -23,7 +25,9 @@ public enum TypeToImportClass {
 	DBCoreEntityKeyImpl("import com.udmtek.DBCore.DAOModel.DBCoreEntityKeyImpl"),
 	DBCoreDTO("import com.udmtek.DBCore.DAOModel.DBCoreDTO"),
 	DBCoreDTOImpl("import com.udmtek.DBCore.DAOModel.DBCoreDTOImpl"),
-	DBCoreDTOMapperImpl("import com.udmtek.DBCore.DAOModel.DBCoreDTOMapperImpl;"),
+	DBCoreDTOMapperImpl("import com.udmtek.DBCore.DAOModel.DBCoreDTOMapperImpl"),
+	ManyToOne("import javax.persistence.ManyToOne"),
+	JoinColumn("import javax.persistence.JoinColumn"),
 	;
 	
 	private String importClass;

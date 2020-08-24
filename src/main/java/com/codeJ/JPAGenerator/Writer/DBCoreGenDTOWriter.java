@@ -1,4 +1,4 @@
-package com.udmtek.DBCoreGen.Comm;
+package com.codeJ.JPAGenerator.Writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,8 +8,11 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
 
-import com.udmtek.DBCoreGen.DBconn.ColumnInfo;
-import com.udmtek.DBCoreGen.DBconn.TableInfo;
+import com.codeJ.JPAGenerator.Comm.ColumnInfo;
+import com.codeJ.JPAGenerator.Comm.ColumnTypeEnum;
+import com.codeJ.JPAGenerator.Comm.DBCoreGenLogger;
+import com.codeJ.JPAGenerator.Comm.TableInfo;
+import com.codeJ.JPAGenerator.Writer.DBCoreGenFileWriter.ClassPack;
 
 
 public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
@@ -47,8 +50,8 @@ public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
 				classPack.makeImportString("DBCoreDTOImpl");
 			}
 			else {
-				classPack.addClassDef("public class " + DtoName +" extends DBCoreDTOImpl ");
-				classPack.makeImportString("DBCoreDTOImpl");
+				classPack.addClassDef("public class " + DtoName +" implements DBCoreDTO ");
+				classPack.makeImportString("DBCoreDTO");
 			}
 			//column key columns define
 			mekeColumns(keyColumnInfos,classPack);
@@ -61,7 +64,12 @@ public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
 			classPack.addMethodDef("	@Override");
 			classPack.addMethodDef("	public Object clone() throws CloneNotSupportedException {" );
 			classPack.addMethodDef("		return super.clone();");
-			classPack.addMethodDef("	}") ;
+			classPack.addMethodDef("	}\r\n") ;
+			classPack.addMethodDef("	@Override");
+			classPack.addMethodDef("	public boolean isValid() {" );
+			classPack.addMethodDef("		return false;");
+			classPack.addMethodDef("	}\r\n") ;
+			
 			writeStream(bufferWriter, classPack);
 			bufferWriter.flush();
 			bufferWriter.close();
@@ -79,7 +87,7 @@ public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
 				columnName = columnInfo.getColumnName();
 				columnType = columnInfo.getTypeName().toUpperCase();
 				ColumnTypeEnum dbClumnType= ColumnTypeEnum.valueOf(columnType);
-				classPack.addAttrDef("	private " + dbClumnType.getJavaType() + " " + convertCamel(columnName) + ";");
+				classPack.addAttrDef("	private " + dbClumnType.getJavaType() + " " + convertCamel(columnName) + ";\r\n");
 				classPack.makeImportString( dbClumnType.getJavaType());
 			}	catch (Exception e ) {
 				DBCoreGenLogger.printInfo("ColumnName:" + columnName + "columnType:"  + columnType);
