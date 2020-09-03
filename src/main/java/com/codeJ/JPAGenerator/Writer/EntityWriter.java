@@ -5,33 +5,24 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.codeJ.JPAGenerator.Comm.ColumnInfo;
 import com.codeJ.JPAGenerator.Comm.ColumnTypeEnum;
-import com.codeJ.JPAGenerator.Comm.DBCoreGenFileReader;
-import com.codeJ.JPAGenerator.Comm.DBCoreGenLogger;
+import com.codeJ.JPAGenerator.Comm.PropertyFileReader;
 import com.codeJ.JPAGenerator.Comm.TableInfo;
-import com.codeJ.JPAGenerator.DBconn.DBConnector;
-import com.codeJ.JPAGenerator.Writer.DBCoreGenFileWriter.ClassPack;
-
 import io.netty.util.internal.StringUtil;
 
-import static java.util.stream.Collectors.toList;
-
-public class DBCoreGenEntityWriter extends DBCoreGenFileWriter {
-	private static Logger logger = LoggerFactory.getLogger(DBConnector.class);
+public class EntityWriter extends FileWriter {
+	private static Logger logger = LoggerFactory.getLogger(EntityWriter.class);
 	
-	public static void generateFile(	DBCoreGenFileReader configReader,
+	public static void generateFile(	PropertyFileReader configReader,
 										TableInfo tableInfo,
 										Map <String,String> classNameTailMap) {
 		String tableName= tableInfo.getTableName();
-		String className= DBCoreGenFileWriter.convertCamel(tableName);
+		String className= FileWriter.convertCamel(tableName);
 		String path=configReader.getExtractPath() + "//" + className;
 		String packageName = configReader.getPackageName() + "." + className;
 		boolean tableJoin=configReader.isTableJoin();
@@ -58,7 +49,7 @@ public class DBCoreGenEntityWriter extends DBCoreGenFileWriter {
 		List<ColumnInfo> columnInfos= tableInfo.getColumns();
 		
 		classPack.addClassDef("@Table(name=\"" + tableName + "\")");
-		if ( keyColumnInfos.size() >= 2 )	//primary key가 2개 이상일 경우 복합키 생성
+//		if ( keyColumnInfos.size() >= 2 )	//primary key가 2개 이상일 경우 복합키 생성
 			classPack.addClassDef("@IdClass(" + className + entityTail + ".Key.class)");
 		
 		classPack.makeImportString("Table");
@@ -77,26 +68,26 @@ public class DBCoreGenEntityWriter extends DBCoreGenFileWriter {
 			bufferWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream(writeFile),"UTF8"));
 			if (extendClass) {			// column에 history column 이 있으면 이미 구현된 class로부터 상속 
 										// (creator_id, create_date_time, updator_id, update_data_time
-				classPack.addClassDef("public class " + className + entityTail + " extends DBCoreEntityImpl ");
-				classPack.makeImportString("DBCoreEntityImpl");			
+				classPack.addClassDef("public class " + className + entityTail + " extends GenericEntityImpl ");
+				classPack.makeImportString("GenericEntityImpl");			
 			}
 			else {
-				classPack.addClassDef("public class " + className + entityTail + " implements DBCoreEntity ");
-				classPack.makeImportString("DBCoreEntity");	
+				classPack.addClassDef("public class " + className + entityTail + " implements GenericEntity ");
+				classPack.makeImportString("GenericEntity");	
 			}
 			//define key columns attribute
 			makeKeyColumns(keyColumnInfos, classPack);
 			//define columns attribute
 			makeColumns(columnInfos, classPack,tableJoin,configReader.getPackageName());
-			if ( keyColumnInfos.size() >= 2 )	{ //primary key가 2개 이상일 경우 복합키 생성
+//			if ( keyColumnInfos.size() >= 2 )	{ //primary key가 2개 이상일 경우 복합키 생성
 				//define key Class attribute
 				classPack.addAttrDef("\r\n	@Transient" );
 				classPack.addAttrDef("	private Key key;");
 				classPack.makeImportString("Transient");
-			}
+//			}
 			//define footer
 			makeFooter(className + entityTail, keyColumnInfos,classPack);
-//			DBCoreGenLogger.printInfo(classPack.makeTotals());
+			logger.info(classPack.makeTotals());
 			writeStream(bufferWriter, classPack);
 			bufferWriter.flush();
 			bufferWriter.close();
@@ -172,6 +163,7 @@ public class DBCoreGenEntityWriter extends DBCoreGenFileWriter {
 					classPack.addImportEntityClass( ImportString);
 				}	
 			}	catch (Exception e ) {
+				e.printStackTrace();
 				logger.error("ColumnName:{}:{}" ,columnName,columnType);
 				throw e;
 			}
@@ -202,12 +194,16 @@ public class DBCoreGenEntityWriter extends DBCoreGenFileWriter {
 		classPack.addMethodDef("		return this.toString() + super.toString();");
 		classPack.addMethodDef("	}");
 		classPack.addMethodDef("	public " + className + "() {}");
-		if ( keyColumnInfos.size() >= 2 )	{ //primary key가 2개 이상일 경우 복합키 생성
+//		if ( keyColumnInfos.size() >= 2 )	{ //primary key가 2개 이상일 경우 복합키 생성
 			classPack.addMethodDef("	public " + className + "(" + constArgs  + ") {");
+			for (String keyArg:keyColumns)
+				classPack.addMethodDef("		this." + keyArg + "= " + keyArg + ";");	
 			classPack.addMethodDef("		if ( key == null)");
 			classPack.addMethodDef("			key= new Key (" + keyConstArgs + ");");
 			classPack.addMethodDef("	}");
-			classPack.addMethodDef("	public Key getKey() {");
+			classPack.addMethodDef("	public DBCoreEntityKey getKey() {");
+			classPack.addMethodDef("		if ( key == null)");
+			classPack.addMethodDef("			key= new Key (" + keyConstArgs + ");");
 			classPack.addMethodDef("		return key;");
 			classPack.addMethodDef("	}" );
 			classPack.addMethodDef("	public Key getKey(" + constArgs + ") {" );
@@ -216,9 +212,9 @@ public class DBCoreGenEntityWriter extends DBCoreGenFileWriter {
 			classPack.addMethodDef("		return key;");
 			classPack.addMethodDef("	}");
 		
-			classPack.addMethodDef("	public static class Key extends DBCoreEntityKeyImpl {") ;
-			classPack.makeImportString("DBCoreEntityKeyImpl");
-			
+			classPack.addMethodDef("	public static class Key extends GenericEntityKeyImpl {") ;
+			classPack.makeImportString("GenericEntityKeyImpl");
+			classPack.makeImportString("GenericEntityKey");
 			int i=0;
 			for (String keyString :keyColumns) {
 				String keyType =keytypes[i++];
@@ -237,6 +233,6 @@ public class DBCoreGenEntityWriter extends DBCoreGenFileWriter {
 			}
 			classPack.addMethodDef("		}");
 			classPack.addMethodDef("	}");
-		}
+//		}
 	}
 }

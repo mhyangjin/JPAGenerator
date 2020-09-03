@@ -8,9 +8,9 @@ import java.io.OutputStreamWriter;
 import java.util.Map;
 
 import com.codeJ.JPAGenerator.Comm.TableInfo;
-import com.codeJ.JPAGenerator.Writer.DBCoreGenFileWriter.ClassPack;
+import com.codeJ.JPAGenerator.Writer.FileWriter.ClassPack;
 
-public class DBCoreGenDAOWriter extends DBCoreGenFileWriter {
+public class DAOWriter extends FileWriter {
 	
 	public static void generateFile(String path, String packageName, TableInfo tableInfo,Map <String,String> classNameTailMap) {
 		String tableName= tableInfo.getTableName();

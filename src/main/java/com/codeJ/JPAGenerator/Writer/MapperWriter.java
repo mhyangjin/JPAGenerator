@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.codeJ.JPAGenerator.Comm.TableInfo;
 
-public class DBCoreGenMapperWriter extends DBCoreGenFileWriter {
+public class MapperWriter extends FileWriter {
 	public static void generateFile(String path, String packageName, TableInfo tableInfo,Map <String,String> classNameTailMap) {
 		String tableName= tableInfo.getTableName();
 		String className= convertCamel(tableName);
@@ -26,9 +26,9 @@ public class DBCoreGenMapperWriter extends DBCoreGenFileWriter {
 		bufferWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream(writeFile),"UTF8"));
 
 		classPack.addClassDef("@Component");
-		classPack.addClassDef("public class "+MapperName+" extends DBCoreDTOMapperImpl<"+EntityName+", "+DTOName+" >");
+		classPack.addClassDef("public class "+MapperName+" extends GenericMapperImpl<"+EntityName+", "+DTOName+" >");
 		classPack.makeImportString("Component");
-		classPack.makeImportString("DBCoreDTOMapperImpl");
+		classPack.makeImportString("GenericMapperImpl");
 		
 		//key columns define
 		makeconstructor(className, classNameTailMap,classPack);

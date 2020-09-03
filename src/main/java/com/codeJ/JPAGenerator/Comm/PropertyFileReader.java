@@ -9,9 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.Getter;
 
-public class DBCoreGenFileReader {
+public class PropertyFileReader {
+	private static Logger logger = LoggerFactory.getLogger(PropertyFileReader.class);
 	private  final String properyFile="./src/main/resources/DBInfo.properties";
 	@Getter
 	private String outputMode;
@@ -50,7 +54,7 @@ public class DBCoreGenFileReader {
 		}
 	}
 
-	public DBCoreGenFileReader() {
+	public PropertyFileReader() {
 		tables=new ArrayList<String>();
 		ignoreTables=new ArrayList<String>();
 	}
@@ -64,7 +68,7 @@ public class DBCoreGenFileReader {
 	}
 	
 	public   void loadConfig() {
-		DBCoreGenLogger.printInfo("readFile");
+		logger.info("readFile");
 		
 		BufferedReader bufferReader=null;
 		FileReader fileReader=null;
@@ -103,46 +107,46 @@ public class DBCoreGenFileReader {
 				switch (contentsIndex) {
 				case OUTPUTMODE:
 					outputMode=line.substring(line.indexOf("=")+1);
-					DBCoreGenLogger.printInfo("OUTPUTMODE:" + outputMode);
+					logger.info("OUTPUTMODE:{}", outputMode);
 					break;
 				case DBNAME:
 					dbName=line.substring(line.indexOf("=")+1);
-					DBCoreGenLogger.printInfo("CONFIG:DBNAME:" + dbName);
+					logger.info("CONFIG:DBNAME:{}", dbName);
 					break;
 				case EXTRACTPATH:
 					extractPath=line.substring(line.indexOf("=")+1);
-					DBCoreGenLogger.printInfo("extractPath:" + extractPath);
+					logger.info("extractPath:{}", extractPath);
 					break;
 				case PACKAGENAME:
 					packageName=line.substring(line.indexOf("=")+1);
-					DBCoreGenLogger.printInfo("packageName:" + packageName);
+					logger.info("packageName:{}",packageName);
 					break;
 				case TABLES:
 					temp=line.substring(line.indexOf("=")+1);
 					if ( temp.isEmpty())
-						DBCoreGenLogger.printInfo("table is empty:");
+						logger.info("table is empty:");
 					else
 						tables = Arrays.asList(temp.split(","));
-					DBCoreGenLogger.printInfo("tables:" + tables);
+					logger.info("tables:{}", tables);
 					break;
 				case IGNORETABLES:
 					temp=line.substring(line.indexOf("=")+1);
 					if ( temp.isEmpty())
-						DBCoreGenLogger.printInfo("ignore table is empty:");
+						logger.info("ignore table is empty:");
 					else
 						ignoreTables = Arrays.asList(temp.split(","));
-					DBCoreGenLogger.printInfo("ignore tables:" + ignoreTables);
+					logger.info("ignore tables:{}",ignoreTables);
 				case TABLEJOIN:
 					String tableJoinString=line.substring(line.indexOf("=")+1);
 					if ( tableJoinString.contentEquals("Y"))
 						tableJoin=true;
 					else
 						tableJoin=false;
-					DBCoreGenLogger.printInfo("tableJoin:" + tableJoinString);
+					logger.info("tableJoin:{}" ,tableJoinString);
 					break;
 				case SCHEMANAME:
 					schemaName=line.substring(line.indexOf("=")+1);
-					DBCoreGenLogger.printInfo("schemaName:" + schemaName);
+					logger.info("schemaName:{}",schemaName);
 					break;
 				}
 			}	
@@ -155,7 +159,7 @@ public class DBCoreGenFileReader {
 			e.printStackTrace();
 
 		}
-		DBCoreGenLogger.printInfo("Buffer:" + tables.size());
+		logger.info("Buffer:{}",tables.size());
 
 	}	
 }

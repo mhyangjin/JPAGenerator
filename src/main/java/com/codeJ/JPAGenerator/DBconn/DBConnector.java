@@ -26,7 +26,6 @@ import javax.persistence.SqlResultSetMapping;
 import org.springframework.stereotype.Component;
 
 import com.codeJ.JPAGenerator.Comm.ColumnInfo;
-import com.codeJ.JPAGenerator.Comm.DBCoreGenLogger;
 
 /**
  * @author julu1

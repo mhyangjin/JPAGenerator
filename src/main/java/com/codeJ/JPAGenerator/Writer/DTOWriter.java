@@ -8,14 +8,16 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.codeJ.JPAGenerator.Comm.ColumnInfo;
 import com.codeJ.JPAGenerator.Comm.ColumnTypeEnum;
-import com.codeJ.JPAGenerator.Comm.DBCoreGenLogger;
 import com.codeJ.JPAGenerator.Comm.TableInfo;
-import com.codeJ.JPAGenerator.Writer.DBCoreGenFileWriter.ClassPack;
 
-
-public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
+public class DTOWriter extends FileWriter {
+	private static Logger logger = LoggerFactory.getLogger(DTOWriter.class);
+	
 	public static void generateFile(String path, String packageName, TableInfo tableInfo,Map <String,String> classNameTailMap) {
 		String tableName= tableInfo.getTableName();
 		String className= convertCamel(tableName);
@@ -46,12 +48,12 @@ public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
 			classPack.makeImportString("Scope");
 	
 			if ( extendClass) {
-				classPack.addClassDef("public class " + DtoName + " extends DBCoreDTOImpl ");
-				classPack.makeImportString("DBCoreDTOImpl");
+				classPack.addClassDef("public class " + DtoName + " extends GenericDTOImpl ");
+				classPack.makeImportString("GenericDTOImpl");
 			}
 			else {
-				classPack.addClassDef("public class " + DtoName +" implements DBCoreDTO ");
-				classPack.makeImportString("DBCoreDTO");
+				classPack.addClassDef("public class " + DtoName +" implements GenericDTO ");
+				classPack.makeImportString("GenericDTO");
 			}
 			//column key columns define
 			mekeColumns(keyColumnInfos,classPack);
@@ -90,7 +92,7 @@ public class DBCoreGenDTOWriter extends DBCoreGenFileWriter {
 				classPack.addAttrDef("	private " + dbClumnType.getJavaType() + " " + convertCamel(columnName) + ";\r\n");
 				classPack.makeImportString( dbClumnType.getJavaType());
 			}	catch (Exception e ) {
-				DBCoreGenLogger.printInfo("ColumnName:" + columnName + "columnType:"  + columnType);
+				logger.info("ColumnName:{} columnType:{}", columnName, columnType);
 				throw e;
 			}
 		}		

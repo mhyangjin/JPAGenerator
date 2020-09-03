@@ -3,10 +3,12 @@ package com.codeJ.JPAGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.codeJ.JPAGenerator.Comm.ColumnInfo;
-import com.codeJ.JPAGenerator.Comm.DBCoreGenFileManager;
-import com.codeJ.JPAGenerator.Comm.DBCoreGenFileReader;
-import com.codeJ.JPAGenerator.Comm.DBCoreGenLogger;
+import com.codeJ.JPAGenerator.Comm.OutputFileManager;
+import com.codeJ.JPAGenerator.Comm.PropertyFileReader;
 import com.codeJ.JPAGenerator.Comm.TableInfo;
 import com.codeJ.JPAGenerator.DBconn.DBConnector;
 import com.codeJ.JPAGenerator.DBconn.PostgresQuery;
@@ -14,7 +16,8 @@ import com.codeJ.JPAGenerator.DBconn.QueryMaker;
 
 
 public class ServiceController {
-	DBCoreGenFileReader configReader;
+	private static Logger logger = LoggerFactory.getLogger(ServiceController.class);
+	PropertyFileReader configReader;
 	DBConnector dbcon;
 	List<TableInfo> tableInfos;
 
@@ -25,7 +28,7 @@ public class ServiceController {
 	}
 	
 	public boolean readconfig() {
-		configReader= new DBCoreGenFileReader();
+		configReader= new PropertyFileReader();
 		boolean cofigFileOK = configReader.readConfigFile();
 		return cofigFileOK;
 	}
@@ -34,13 +37,13 @@ public class ServiceController {
 		List<String> ignoreTables=configReader.getIgnoreTables();
 		String modelPath=configReader.getExtractPath();
 		
-		DBCoreGenLogger.printInfo("serviceProcess:" + getTables.size());
+		logger.info("serviceProcess: {}",getTables.size());
 		if ( getTables.size() == 0)
 				getTables= getTables();
 		
-		DBCoreGenFileManager filewriter= new DBCoreGenFileManager(configReader);
+		OutputFileManager filewriter= new OutputFileManager(configReader);
 		if (! filewriter.makeDir(modelPath) ) {
-			DBCoreGenLogger.printError("Making dir if fail!! - " + modelPath);
+			logger.error("Making dir if fail!! - {}",modelPath);
 			return;
 		}
 		for ( int i=0; i< getTables.size(); i ++) {
@@ -48,6 +51,7 @@ public class ServiceController {
 			if (ignoreTables.contains(getTables.get(i))) continue;
 			
 			List<ColumnInfo>  columns = getColumns(getTables.get(i));
+			logger.info("ColumnInfos size:{}",columns.size());
 			if ( columns != null) {
 				TableInfo tableInfo = new TableInfo(getTables.get(i), columns);
 				if ( tableInfo.getKeyColumns().size() > 0 )
@@ -56,12 +60,12 @@ public class ServiceController {
 			}
 			
 		}
-		DBCoreGenLogger.printInfo("tableInfos size:" + tableInfos.size());
+		logger.info("tableInfos size:{}",tableInfos.size());
 		for ( int i=0; i< tableInfos.size(); i ++) {
-			DBCoreGenLogger.printInfo("Table makeFile:" + tableInfos.get(i).getTableName());
+			logger.info("Table makeFile:{}", tableInfos.get(i).getTableName());
 			filewriter.makeFile(tableInfos.get(i));
 		}
-		DBCoreGenLogger.printInfo("Table Info gen complete!" + tableInfos.size());
+		logger.info("Table Info gen complete! {}", tableInfos.size());
 	}
 	
 
@@ -85,7 +89,7 @@ public class ServiceController {
 		List<ColumnInfo> columns = null;
 		try {
 			columns = dbcon.getColumns(dbName, TableName);
-			DBCoreGenLogger.printInfo("columns size:" + columns.size());
+			logger.info("columns size:{}",columns.size());
 		}
 		catch (Exception e) {
 			e.printStackTrace();

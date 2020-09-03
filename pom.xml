@@ -8,9 +8,9 @@
         <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-	<groupId>com.udmtek</groupId>
-	<artifactId>DBCoreGen</artifactId>
-	<name>DBCoreGen</name>
+	<groupId>com.codeJ</groupId>
+	<artifactId>JPAGenerator</artifactId>
+	<name>JPAGenerator</name>
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
 	<description>entity generator from DB</description>
