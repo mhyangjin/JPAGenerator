@@ -26,9 +26,9 @@ public class MapperWriter extends FileWriter {
 		bufferWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream(writeFile),"UTF8"));
 
 		classPack.addClassDef("@Component");
-		classPack.addClassDef("public class "+MapperName+" extends GenericMapperImpl<"+EntityName+", "+DTOName+" >");
+		classPack.addClassDef("public class "+MapperName+" extends GenericDTOMapperImpl<"+EntityName+", "+DTOName+" >");
 		classPack.makeImportString("Component");
-		classPack.makeImportString("GenericMapperImpl");
+		classPack.makeImportString("GenericDTOMapperImpl");
 		
 		//key columns define
 		makeconstructor(className, classNameTailMap,classPack);

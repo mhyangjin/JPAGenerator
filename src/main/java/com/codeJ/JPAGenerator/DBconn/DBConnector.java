@@ -63,7 +63,7 @@ public class DBConnector{
 		List <ColumnInfo> columns = new ArrayList<ColumnInfo>();
 		List<Object[]> results = query.getResultList();
 		for ( Object[] result:results) {
-			logger.debug("COLUMN:" +String.valueOf(result[0]));
+//			logger.trace("COLUMN:" +String.valueOf(result[0]));
 			ColumnInfo column= new ColumnInfo(String.valueOf(result[0]),
 										String.valueOf(result[1]),
 										String.valueOf(result[2]),

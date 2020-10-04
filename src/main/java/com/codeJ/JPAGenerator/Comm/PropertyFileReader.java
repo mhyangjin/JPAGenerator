@@ -77,7 +77,10 @@ public class PropertyFileReader {
 			fileReader = new FileReader(configFile);
 			bufferReader = new BufferedReader(fileReader);
 			ContentsIndex contentsIndex=null;	
-			while ((line = bufferReader.readLine()) != null) {			
+			while ((line = bufferReader.readLine()) != null) {	
+				if ( line.indexOf("#") > -1 ) {
+					continue;
+				}
 				if ( line.indexOf("dbName") > -1 ) {
 					contentsIndex = ContentsIndex.DBNAME;
 				}

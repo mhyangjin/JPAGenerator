@@ -22,7 +22,7 @@ public class PostgresQuery implements QueryMaker {
 					.append("		A.constraintName\n"															)
 					.append("FROM ("																			)
 					.append("SELECT	CL.COLUMN_NAME               				 AS columnName, \n"				)
-					.append("       MAX(CL.UDT_NAME )              			   AS typeName, \n"					)
+					.append("        MAX(CASE WHEN( CL.DATA_TYPE='bigint') THEN CL.DATA_TYPE ELSE CL.UDT_NAME END) 	   AS typeName, \n"					)
 					.append("       MAX(CL.IS_NULLABLE )         				    AS isNullable, \n"			)
 					.append("		MAX(COALESCE(CL.CHARACTER_MAXIMUM_LENGTH,0))	  AS maxLen, \n" 			) 
 					.append("		MAX(CASE WHEN (RIGHT(COALESCE(TC.CONSTRAINT_NAME,'N'),4)='pkey') "			)

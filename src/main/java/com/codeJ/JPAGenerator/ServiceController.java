@@ -60,6 +60,8 @@ public class ServiceController {
 			}
 			
 		}
+//		for ( String ignoreTable:ignoreTables)
+//		logger.info("ignoreTables size:{}",ignoreTable);
 		logger.info("tableInfos size:{}",tableInfos.size());
 		for ( int i=0; i< tableInfos.size(); i ++) {
 			logger.info("Table makeFile:{}", tableInfos.get(i).getTableName());

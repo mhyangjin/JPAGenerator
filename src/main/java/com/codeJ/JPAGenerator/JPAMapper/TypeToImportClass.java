@@ -26,11 +26,14 @@ public enum TypeToImportClass {
 	GenericEntityKeyImpl("import com.codeJ.JPA.DAOModel.GenericEntityKeyImpl"),
 	GenericEntityKey("import com.codeJ.JPA.DAOModel.GenericEntityKey"),
 	GenericDTO("import com.codeJ.JPA.DAOModel.GenericDTO"),
-	GenericDTOImpl("import com.codeJ.JPA.DAOModel.DGenericDTOImpl"),
+	GenericDTOImpl("import com.codeJ.JPA.DAOModel.GenericDTOImpl"),
 	GenericDTOMapper("import com.codeJ.JPA.DAOModel.GenericDTOMapper"),
 	GenericDTOMapperImpl("import com.codeJ.JPA.DAOModel.GenericDTOMapperImpl"),
 	ManyToOne("import javax.persistence.ManyToOne"),
 	JoinColumn("import javax.persistence.JoinColumn"),
+	GeneratedValue("import javax.persistence.GeneratedValue"),
+	GenerationType("import javax.persistence.GenerationType"),
+	SequenceGenerator("import javax.persistence.SequenceGenerator"),
 	;
 	
 	private String importClass;

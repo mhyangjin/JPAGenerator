@@ -9,6 +9,7 @@ public enum ColumnTypeEnum {
 	NUMERIC("float"),
 	INT4("int"),
 	INT8("long"),
+	BIGINT("long"),
 	CHAR("char"),
 	OID("int"),
 	TEXT("String"),

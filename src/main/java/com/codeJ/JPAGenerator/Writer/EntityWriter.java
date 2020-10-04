@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.SequenceGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codeJ.JPAGenerator.Comm.ColumnInfo;
@@ -76,7 +81,7 @@ public class EntityWriter extends FileWriter {
 				classPack.makeImportString("GenericEntity");	
 			}
 			//define key columns attribute
-			makeKeyColumns(keyColumnInfos, classPack);
+			makeKeyColumns(tableInfo, classPack);
 			//define columns attribute
 			makeColumns(columnInfos, classPack,tableJoin,configReader.getPackageName());
 //			if ( keyColumnInfos.size() >= 2 )	{ //primary key가 2개 이상일 경우 복합키 생성
@@ -86,8 +91,8 @@ public class EntityWriter extends FileWriter {
 				classPack.makeImportString("Transient");
 //			}
 			//define footer
-			makeFooter(className + entityTail, keyColumnInfos,classPack);
-			logger.info(classPack.makeTotals());
+			makeFooter(className + entityTail, keyColumnInfos, classPack);
+//			logger.info(classPack.makeTotals());
 			writeStream(bufferWriter, classPack);
 			bufferWriter.flush();
 			bufferWriter.close();
@@ -96,7 +101,11 @@ public class EntityWriter extends FileWriter {
 		}
 	}
 	
-	public static void makeKeyColumns (List<ColumnInfo> keyColumnInfos,ClassPack classPack) {
+	public static void makeKeyColumns (TableInfo tableInfo,ClassPack classPack) {
+		String tableName= tableInfo.getTableName();
+		String className= FileWriter.convertCamel(tableName);
+		List<ColumnInfo> keyColumnInfos=tableInfo.getKeyColumns();
+		
 		for ( ColumnInfo keyColumnInfo:keyColumnInfos)  {
 			String columnName = keyColumnInfo.getColumnName();
 			String columnType = keyColumnInfo.getTypeName().toUpperCase();
@@ -106,6 +115,24 @@ public class EntityWriter extends FileWriter {
 			classPack.makeImportString("Id");
 			classPack.makeImportString("Column");
 			String attrAnno="";
+			logger.info("DATA Type {}",keyColumnInfo.getTypeName());
+			if (keyColumnInfo.getTypeName().contains("bigint")) {
+				String GeneratorName=className+"_SEQ_GENERATOR";
+				String SequenceName=tableName + "_" + columnName + "_seq";
+				String generateString = "	 @GeneratedValue(strategy=GenerationType.SEQUENCE,\r\n" +
+										"			generator=\"" + GeneratorName + "\")";
+				
+				classPack.addAttrDef(generateString);
+				String sequenceString = "	 @SequenceGenerator(name=\"" + GeneratorName +"\",\r\n" +
+										"			sequenceName=\"" + SequenceName + "\",\r\n" +
+										"			initialValue=1,allocationSize=1 )";
+						
+				classPack.addAttrDef(sequenceString);
+				classPack.makeImportString("GeneratedValue");
+				classPack.makeImportString("GenerationType");
+				classPack.makeImportString("SequenceGenerator");
+			}
+			
 			if (keyColumnInfo.getIsNullable().contentEquals("NO")) {
 				attrAnno=", nullable=false ";
 			}
@@ -128,9 +155,9 @@ public class EntityWriter extends FileWriter {
 				
 				columnName = columnInfo.getColumnName();
 				columnType = columnInfo.getTypeName().toUpperCase();
-				logger.debug("BEfore ColumnName:{}:{}:{}",columnName,tableJoin,columnInfos.size());
+//				logger.debug("BEfore ColumnName:{}:{}:{}",columnName,tableJoin,columnInfos.size());
 				if ( tableJoin == false || StringUtil.isNullOrEmpty(columnInfo.getConstsraintTable())) {
-					logger.debug(" ColumnName:{}",columnName );
+//					logger.debug(" ColumnName:{}",columnName );
 					ColumnTypeEnum dbClumnType= ColumnTypeEnum.valueOf(columnType);
 					String attrAnno = "	" +"@Column(name=\"" + columnName +"\" ";
 					if (columnInfo.getIsNullable().contentEquals("NO")) {
@@ -201,7 +228,7 @@ public class EntityWriter extends FileWriter {
 			classPack.addMethodDef("		if ( key == null)");
 			classPack.addMethodDef("			key= new Key (" + keyConstArgs + ");");
 			classPack.addMethodDef("	}");
-			classPack.addMethodDef("	public DBCoreEntityKey getKey() {");
+			classPack.addMethodDef("	public GenericEntityKeyImpl getKey() {");
 			classPack.addMethodDef("		if ( key == null)");
 			classPack.addMethodDef("			key= new Key (" + keyConstArgs + ");");
 			classPack.addMethodDef("		return key;");
