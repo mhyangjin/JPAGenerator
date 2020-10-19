@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator;
+package kr.co.codeJ.JPAGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codeJ.JPAGenerator.Comm.ColumnInfo;
-import com.codeJ.JPAGenerator.Comm.OutputFileManager;
-import com.codeJ.JPAGenerator.Comm.PropertyFileReader;
-import com.codeJ.JPAGenerator.Comm.TableInfo;
-import com.codeJ.JPAGenerator.DBconn.DBConnector;
-import com.codeJ.JPAGenerator.DBconn.PostgresQuery;
-import com.codeJ.JPAGenerator.DBconn.QueryMaker;
+import kr.co.codeJ.JPAGenerator.Comm.ColumnInfo;
+import kr.co.codeJ.JPAGenerator.Comm.OutputFileManager;
+import kr.co.codeJ.JPAGenerator.Comm.PropertyFileReader;
+import kr.co.codeJ.JPAGenerator.Comm.TableInfo;
+import kr.co.codeJ.JPAGenerator.DBconn.DBConnector;
+import kr.co.codeJ.JPAGenerator.DBconn.PostgresQuery;
+import kr.co.codeJ.JPAGenerator.DBconn.QueryMaker;
 
 
 public class ServiceController {

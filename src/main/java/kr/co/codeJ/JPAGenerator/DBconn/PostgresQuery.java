@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator.DBconn;
+package kr.co.codeJ.JPAGenerator.DBconn;
 
 public class PostgresQuery implements QueryMaker {
 

@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator.JPAMapper;
+package kr.co.codeJ.JPAGenerator.JPAMapper;
 
 import javax.persistence.ManyToOne;
 

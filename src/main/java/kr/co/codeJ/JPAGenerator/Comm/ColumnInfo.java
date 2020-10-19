@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator.Comm;
+package kr.co.codeJ.JPAGenerator.Comm;
 
 import lombok.Getter;
 import lombok.Setter;

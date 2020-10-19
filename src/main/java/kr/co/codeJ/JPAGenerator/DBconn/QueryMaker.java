@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator.DBconn;
+package kr.co.codeJ.JPAGenerator.DBconn;
 
 public interface QueryMaker {
 	public String getTableListQuery(String schemaname );

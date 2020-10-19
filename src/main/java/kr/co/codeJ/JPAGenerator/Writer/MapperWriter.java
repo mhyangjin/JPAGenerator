@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator.Writer;
+package kr.co.codeJ.JPAGenerator.Writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Map;
 
-import com.codeJ.JPAGenerator.Comm.TableInfo;
+import kr.co.codeJ.JPAGenerator.Comm.TableInfo;
 
 public class MapperWriter extends FileWriter {
 	public static void generateFile(String path, String packageName, TableInfo tableInfo,Map <String,String> classNameTailMap) {

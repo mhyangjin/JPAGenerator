@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.codeJ.JPAGenerator.DBconn;
+package kr.co.codeJ.JPAGenerator.DBconn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import javax.persistence.SqlResultSetMapping;
 
 import org.springframework.stereotype.Component;
 
-import com.codeJ.JPAGenerator.Comm.ColumnInfo;
+import kr.co.codeJ.JPAGenerator.Comm.ColumnInfo;
 
 /**
  * @author julu1

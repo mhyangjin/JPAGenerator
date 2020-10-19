@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator;
+package kr.co.codeJ.JPAGenerator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

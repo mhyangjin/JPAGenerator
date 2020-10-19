@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator.Writer;
+package kr.co.codeJ.JPAGenerator.Writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Map;
 
-import com.codeJ.JPAGenerator.Comm.TableInfo;
-import com.codeJ.JPAGenerator.Writer.FileWriter.ClassPack;
+import kr.co.codeJ.JPAGenerator.Comm.TableInfo;
+import kr.co.codeJ.JPAGenerator.Writer.FileWriter.ClassPack;
 
 public class DAOWriter extends FileWriter {
 	

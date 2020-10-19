@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator.Writer;
+package kr.co.codeJ.JPAGenerator.Writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,11 +14,12 @@ import javax.persistence.SequenceGenerator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.codeJ.JPAGenerator.Comm.ColumnInfo;
-import com.codeJ.JPAGenerator.Comm.ColumnTypeEnum;
-import com.codeJ.JPAGenerator.Comm.PropertyFileReader;
-import com.codeJ.JPAGenerator.Comm.TableInfo;
+
 import io.netty.util.internal.StringUtil;
+import kr.co.codeJ.JPAGenerator.Comm.ColumnInfo;
+import kr.co.codeJ.JPAGenerator.Comm.ColumnTypeEnum;
+import kr.co.codeJ.JPAGenerator.Comm.PropertyFileReader;
+import kr.co.codeJ.JPAGenerator.Comm.TableInfo;
 
 public class EntityWriter extends FileWriter {
 	private static Logger logger = LoggerFactory.getLogger(EntityWriter.class);

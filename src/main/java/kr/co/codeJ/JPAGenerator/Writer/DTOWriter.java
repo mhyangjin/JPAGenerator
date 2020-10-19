@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator.Writer;
+package kr.co.codeJ.JPAGenerator.Writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,9 +11,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codeJ.JPAGenerator.Comm.ColumnInfo;
-import com.codeJ.JPAGenerator.Comm.ColumnTypeEnum;
-import com.codeJ.JPAGenerator.Comm.TableInfo;
+import kr.co.codeJ.JPAGenerator.Comm.ColumnInfo;
+import kr.co.codeJ.JPAGenerator.Comm.ColumnTypeEnum;
+import kr.co.codeJ.JPAGenerator.Comm.TableInfo;
 
 public class DTOWriter extends FileWriter {
 	private static Logger logger = LoggerFactory.getLogger(DTOWriter.class);

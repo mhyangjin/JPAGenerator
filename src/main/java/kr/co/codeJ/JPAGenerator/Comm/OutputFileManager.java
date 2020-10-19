@@ -1,4 +1,4 @@
-package com.codeJ.JPAGenerator.Comm;
+package kr.co.codeJ.JPAGenerator.Comm;
 
 import java.io.File;
 import java.util.HashMap;
@@ -7,11 +7,11 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codeJ.JPAGenerator.Writer.DAOWriter;
-import com.codeJ.JPAGenerator.Writer.DTOWriter;
-import com.codeJ.JPAGenerator.Writer.EntityWriter;
-import com.codeJ.JPAGenerator.Writer.FileWriter;
-import com.codeJ.JPAGenerator.Writer.MapperWriter;
+import kr.co.codeJ.JPAGenerator.Writer.DAOWriter;
+import kr.co.codeJ.JPAGenerator.Writer.DTOWriter;
+import kr.co.codeJ.JPAGenerator.Writer.EntityWriter;
+import kr.co.codeJ.JPAGenerator.Writer.FileWriter;
+import kr.co.codeJ.JPAGenerator.Writer.MapperWriter;
 
 public class OutputFileManager {
 	private static Logger logger = LoggerFactory.getLogger(OutputFileManager.class);
