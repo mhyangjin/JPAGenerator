@@ -5,8 +5,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.List;
 import java.util.Map;
 
+import kr.co.codeJ.JPAGenerator.Comm.ColumnInfo;
+import kr.co.codeJ.JPAGenerator.Comm.ColumnTypeEnum;
 import kr.co.codeJ.JPAGenerator.Comm.TableInfo;
 import kr.co.codeJ.JPAGenerator.Writer.FileWriter.ClassPack;
 
@@ -45,6 +48,8 @@ public class DAOWriter extends FileWriter {
 
 			//key columns define
 			makeconstructor(className,classNameTailMap,classPack);
+			makeget(className,classNameTailMap,tableInfo, classPack);;
+			makedelete(className,classNameTailMap,tableInfo, classPack);;
 			writeStream(bufferWriter, classPack);
 
 			bufferWriter.flush();
@@ -62,5 +67,63 @@ public class DAOWriter extends FileWriter {
 		classPack.addMethodDef("		super(" +EntityName + ".class," + DtoName + ".class);");
 		classPack.addMethodDef("	}");
 	
+	}
+	
+	private static void makeget (String className,Map <String,String> classNameTailMap,TableInfo tableInfo,ClassPack classPack) {
+		List<ColumnInfo> keyColumnInfos=tableInfo.getKeyColumns();
+		String constArgs=null;
+		String keyConstArgs=null;
+		String[] keytypes= new String[keyColumnInfos.size()];
+		String[] keyColumns= new String[keyColumnInfos.size()];
+		String DtoName=className + classNameTailMap.get("DTO");
+		String EntityName=className + classNameTailMap.get("ENTITY");
+		
+		for ( int i=0; i <keyColumnInfos.size(); i++)  {
+			ColumnInfo keyColumnInfo = keyColumnInfos.get(i);
+			ColumnTypeEnum dbClumnType= ColumnTypeEnum.valueOf(keyColumnInfo.getTypeName().toUpperCase());
+			keytypes[i] = dbClumnType.getJavaType();
+			keyColumns[i] = convertCamel(keyColumnInfo.getColumnName());
+			if (constArgs == null) 
+				constArgs=   keytypes[i] + " "  + keyColumns[i];
+			else
+				constArgs = constArgs + "," +  keytypes[i] + " "  + keyColumns[i];
+			if (keyConstArgs== null) 
+				keyConstArgs = keyColumns[i];
+			else
+				keyConstArgs = keyConstArgs + "," +  keyColumns[i];
+		}
+		
+		classPack.addMethodDef("	public " + DtoName + " get(" + constArgs  + ") {");
+		classPack.addMethodDef("		return this.get(new " + EntityName + ".Key(" + keyConstArgs + "));");
+		classPack.addMethodDef("	}");
+	}
+	
+	private static void makedelete (String className,Map <String,String> classNameTailMap, TableInfo tableInfo,ClassPack classPack) {
+		List<ColumnInfo> keyColumnInfos=tableInfo.getKeyColumns();
+		String constArgs=null;
+		String keyConstArgs=null;
+		String[] keytypes= new String[keyColumnInfos.size()];
+		String[] keyColumns= new String[keyColumnInfos.size()];
+		String DtoName=className + classNameTailMap.get("DTO");
+		String EntityName=className + classNameTailMap.get("ENTITY");
+		
+		for ( int i=0; i <keyColumnInfos.size(); i++)  {
+			ColumnInfo keyColumnInfo = keyColumnInfos.get(i);
+			ColumnTypeEnum dbClumnType= ColumnTypeEnum.valueOf(keyColumnInfo.getTypeName().toUpperCase());
+			keytypes[i] = dbClumnType.getJavaType();
+			keyColumns[i] = convertCamel(keyColumnInfo.getColumnName());
+			if (constArgs == null) 
+				constArgs=   keytypes[i] + " "  + keyColumns[i];
+			else
+				constArgs = constArgs + "," +  keytypes[i] + " "  + keyColumns[i];
+			if (keyConstArgs== null) 
+				keyConstArgs = keyColumns[i];
+			else
+				keyConstArgs = keyConstArgs + "," +  keyColumns[i];
+		}
+		
+		classPack.addMethodDef("	public void delete(" + constArgs  + ") {");
+		classPack.addMethodDef("		this.delete(new " + EntityName + ".Key(" + keyConstArgs + "));");
+		classPack.addMethodDef("	}");
 	}
 }
